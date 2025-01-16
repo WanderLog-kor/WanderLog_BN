@@ -3,9 +3,9 @@ package com.tripPlanner.project.domain.makePlanner.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tripPlanner.project.domain.board.BoardDto;
-import com.tripPlanner.project.domain.destination.Like;
+import com.tripPlanner.project.domain.like.PlannerLike;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -29,7 +29,7 @@ public class Planner {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference // UserEntity와의 순환 참조 방지
+    @JsonBackReference  // UserEntity와의 순환 참조 방지
     private UserEntity user;
 
     @Column(name = "plannerTitle", nullable = false)
@@ -56,7 +56,7 @@ public class Planner {
     @OneToMany(mappedBy = "plannerId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference // Like와의 순환 참조 방지
-    private List<Like> likes = new ArrayList<>();
+    private List<PlannerLike> plannerLikes = new ArrayList<>();
 
     public PlannerDto toDto(Planner planner,String thumbnailImage) {
         return PlannerDto.builder()

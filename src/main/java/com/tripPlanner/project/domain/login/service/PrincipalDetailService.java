@@ -3,8 +3,8 @@ package com.tripPlanner.project.domain.login.service;
 import com.tripPlanner.project.domain.login.auth.PrincipalDetail;
 import com.tripPlanner.project.domain.login.dto.LoginRequest;
 
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
-import com.tripPlanner.project.domain.signin.repository.UserRepository;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

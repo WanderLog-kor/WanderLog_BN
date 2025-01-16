@@ -115,7 +115,6 @@ public class JwtTokenProvider {
 
     //토큰 복호화 메서드
     public Authentication getTokenInfo(String token){
-        log.info("복호화 간다잇 ~~");
         //토큰 분해
         Claims claims = parseClaims(token);
         
@@ -124,8 +123,6 @@ public class JwtTokenProvider {
         String username = (String) claims.get("username");
         String provider = (String) claims.get("provider");
         String role = (String) claims.get("role");
-
-        log.info("복호화된 토큰 정보: userid={}, provider={}, role={}, username={}", userid, provider, role,username);
 
         // PrincipalDetail 생성
         PrincipalDetail principalDetail = new PrincipalDetail(

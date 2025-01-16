@@ -254,11 +254,11 @@ public class ApiService {
 
 
     // 지역 및 해시태그에 맞춰 데이터를 가져오는 함수
-    public Mono<String> getAreaBasedList(String regionCode, String hashtag, String pageNo, String arrange, String contentTypeId) {
+    public Mono<String> getAreaBasedList(String regionCode, String hashtag, String pageNo, String arrange, String contentTypeId, String numOfRows) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/areaBasedList1"
                 + "?serviceKey=" + serviceKey
-                + "&numOfRows=20"
+                + "&numOfRows=" + numOfRows
                 + "&MobileApp=AppTest"
                 + "&MobileOS=ETC"
                 + "&arrange=" + arrange

@@ -1,8 +1,8 @@
-package com.tripPlanner.project.domain.destination;
+package com.tripPlanner.project.domain.like;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tripPlanner.project.domain.makePlanner.entity.Planner;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
-
 @Table(
-        name = "likes",
+        name = "planner_like",
         indexes = {@Index(name = "idx_planner_user", columnList = "plannerId, userId")}
 )
 @Entity
@@ -23,23 +22,17 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Like {
+public class PlannerLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "plannerId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference // Planner와의 순환 참조 방지
-    private Planner plannerId;
+    @Column(name = "plannerId", nullable = false)
+    private int plannerId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference // UserEntity와의 순환 참조 방지
-    private UserEntity userId;   // 좋아요를 누른 사용자 ID를 참조
+    @Column(name = "userId", nullable = false)
+    private String userId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

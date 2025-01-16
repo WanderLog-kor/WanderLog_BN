@@ -2,10 +2,8 @@ package com.tripPlanner.project.domain.login.service;
 
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
 import com.tripPlanner.project.domain.login.dto.LoginResponse;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
-import com.tripPlanner.project.domain.signin.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

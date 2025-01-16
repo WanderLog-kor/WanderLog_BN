@@ -1,4 +1,4 @@
-package com.tripPlanner.project.domain.destination;
+package com.tripPlanner.project.domain.like;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

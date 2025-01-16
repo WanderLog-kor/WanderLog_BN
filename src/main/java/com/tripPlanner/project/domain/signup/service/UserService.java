@@ -1,15 +1,12 @@
-package com.tripPlanner.project.domain.signin.service;
+package com.tripPlanner.project.domain.signup.service;
 
 
-import com.tripPlanner.project.domain.destination.Like;
-import com.tripPlanner.project.domain.destination.LikeRepository;
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
 
-import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
-import com.tripPlanner.project.domain.signin.UploadProperties;
-import com.tripPlanner.project.domain.signin.dto.UserDto;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
-import com.tripPlanner.project.domain.signin.repository.UserRepository;
+import com.tripPlanner.project.domain.signup.UploadProperties;
+import com.tripPlanner.project.domain.signup.dto.UserDto;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -1,17 +1,12 @@
 package com.tripPlanner.project.domain.Mypage.controller;
 
-import com.tripPlanner.project.domain.Mypage.Service.MypageService;
 import com.tripPlanner.project.domain.Mypage.entity.UpdateUserRequest;
-import com.tripPlanner.project.domain.destination.Like;
-import com.tripPlanner.project.domain.destination.LikeDto;
+import com.tripPlanner.project.domain.like.LikeDto;
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
-import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import com.tripPlanner.project.domain.makePlanner.repository.PlannerRepository;
-import com.tripPlanner.project.domain.makePlanner.service.PlannerService;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
-import com.tripPlanner.project.domain.signin.repository.UserRepository;
-import com.tripPlanner.project.domain.signin.service.UserService;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -295,19 +290,26 @@ public class MypageController {
         }
     }
 
-
-    // LikeContorller
 //    @GetMapping("/{userid}/liked-planners")
-//    public ResponseEntity<?> getLikedPlanners(@PathVariable String userid) {
+//    public ResponseEntity<?> getLikedPlanners(@PathVariable(name = "userid") String userid) {
+//        System.out.println("/{userid}/liked-planners" + userid);
+//        log.info("Received request for liked planners with userid: {}", userid);
+//
 //        Optional<UserEntity> userOptional = userRepository.findById(userid);
+//
 //        if (userOptional.isEmpty()) {
+//
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
 //        }
 //
 //        UserEntity user = userOptional.get();
+//
+//        // Like 데이터를 DTO로 변환
 //        List<LikeDto> likedPlanners = user.getLikes().stream()
 //                .map(like -> new LikeDto(
-//                        (long) like.getPlannerId().getPlannerID(),
+////                        (long) like.getPlannerId().getPlannerID(),
+//                        like.getId(),
+//                        like.getPlannerId().getPlannerID(),
 //                        like.getPlannerId().getPlannerTitle(),
 //                        like.getPlannerId().getArea(),
 //                        like.getPlannerId().getDay(),
@@ -316,43 +318,10 @@ public class MypageController {
 //                ))
 //                .collect(Collectors.toList());
 //
+//        log.info("좋아요한 플래너  : {}", likedPlanners.isEmpty());
+//        log.info("likedPlanners: {}", likedPlanners);
 //        return ResponseEntity.ok(likedPlanners);
 //    }
-    @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping("/{userid}/liked-planners")
-    public ResponseEntity<?> getLikedPlanners(@PathVariable(name = "userid") String userid) {
-        System.out.println("/{userid}/liked-planners" + userid);
-        log.info("Received request for liked planners with userid: {}", userid);
-
-        Optional<UserEntity> userOptional = userRepository.findById(userid);
-
-        if (userOptional.isEmpty()) {
-            log.warn("User not found for userid: {}", userid);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
-        }
-
-        UserEntity user = userOptional.get();
-
-        log.info("User found: {}", user.getUsername());
-
-        // Like 데이터를 DTO로 변환
-        List<LikeDto> likedPlanners = user.getLikes().stream()
-                .map(like -> new LikeDto(
-//                        (long) like.getPlannerId().getPlannerID(),
-                        like.getId(),
-                        like.getPlannerId().getPlannerID(),
-                        like.getPlannerId().getPlannerTitle(),
-                        like.getPlannerId().getArea(),
-                        like.getPlannerId().getDay(),
-                        like.getPlannerId().getDescription(),
-                        like.getPlannerId().getCreateAt()
-                ))
-                .collect(Collectors.toList());
-
-        log.info("좋아요한 플래너  : {}", likedPlanners.isEmpty());
-        log.info("likedPlanners: {}", likedPlanners);
-        return ResponseEntity.ok(likedPlanners);
-    }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(HttpServletRequest request) {

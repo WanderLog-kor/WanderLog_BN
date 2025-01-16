@@ -1,13 +1,11 @@
-package com.tripPlanner.project.domain.signin.controller;
+package com.tripPlanner.project.domain.signup.controller;
 
 
-import com.tripPlanner.project.domain.destination.LikeService;
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
-import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
-import com.tripPlanner.project.domain.signin.repository.UserRepository;
-import com.tripPlanner.project.domain.signin.service.UserService;
-import com.tripPlanner.project.domain.signin.dto.UserDto;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.repository.UserRepository;
+import com.tripPlanner.project.domain.signup.service.UserService;
+import com.tripPlanner.project.domain.signup.dto.UserDto;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

@@ -68,34 +68,33 @@ public class ApiController {
     // 관광지 코스를 띄울 때 여러 필터링을 거쳐 데이터를 표시할 함수 (굳이 이렇게 하는 이유는 API가 제공되지 않기 때문)
     @PostMapping("/api/getSearch")
     public Mono<String> getSearch(@RequestBody ApiRequest apiRequest) {
-        System.out.println("호출");
         String keyword = apiRequest.getKeyword();
         String regionCode = apiRequest.getRegionCode();
         String hashtag = apiRequest.getHashtag();
         String pageNo = apiRequest.getPageNo();
         String arrange = apiRequest.getArrange();
         String contentTypeId = apiRequest.getContentTypeId();
+        String numOfRows = (apiRequest.getNumOfRows() == null || apiRequest.getNumOfRows().isEmpty())
+                ? "20"
+                : apiRequest.getNumOfRows();
+
 
         // 모든 값이 비었을 경우
         if (keyword.isEmpty() && regionCode.isEmpty() && hashtag.isEmpty()) {
-            System.out.println("모든 값 비었을 때 반응");
-            return apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId);
+            return apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId, numOfRows);
         }
 
         // keyword만 있을 경우
         if (!keyword.isEmpty() && regionCode.isEmpty() && hashtag.isEmpty()) {
-            System.out.println("keyword만 있을 때 반응");
             return apiService.getSearchKeyword(keyword.trim(), pageNo, arrange, contentTypeId);
         }
 
         // regionCode나 hashtag만 있을 경우
         if (keyword.isEmpty() && (!regionCode.isEmpty() || !hashtag.isEmpty())) {
-            System.out.println("지역 코드나 카테고리만 있을 때 반응");
-            return apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId);
+            return apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId, numOfRows);
         }
 
-        System.out.println("다 없음");
-        Mono<String> areaBasedListResult = apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId);
+        Mono<String> areaBasedListResult = apiService.getAreaBasedList(regionCode, hashtag, pageNo, arrange, contentTypeId, numOfRows);
         Mono<String> searchKeywordResult = apiService.getSearchKeyword(keyword.trim(), pageNo, arrange, contentTypeId);
 
 
@@ -107,8 +106,7 @@ public class ApiController {
                     // areaBasedList와 searchKeyword를 전달하여 findCommonDataByCat2AndAreaCode를 호출
                     return apiService.findCommonDataByCat2AndAreaCode(areaBasedList, searchKeyword);
                 })
-                .switchIfEmpty(Mono.just("[]"))  // 데이터가 없을 경우 빈 배열을 반환
-                .doOnTerminate(() -> System.out.println("findCommonDataByCat2AndAreaCode 호출 종료"));
+                .switchIfEmpty(Mono.just("[]"));  // 데이터가 없을 경우 빈 배열을 반환
     }
 
     // 관광지 코스 상세페이지로 진입할 때 contentid를 파라미터로 받아서 맵핑
@@ -132,8 +130,6 @@ public class ApiController {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(contentId);
             contentId = jsonNode.get("contentId").asText();
-
-            System.out.println("title : " + contentId);
 
             return apiService.getDetailIntro(contentId, contentTypeId);
         } catch (Exception e) {

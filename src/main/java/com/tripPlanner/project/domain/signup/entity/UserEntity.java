@@ -1,8 +1,10 @@
-package com.tripPlanner.project.domain.signin.entity;
+package com.tripPlanner.project.domain.signup.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.tripPlanner.project.domain.destination.Like;
+import com.tripPlanner.project.domain.like.PlannerLike;
+import com.tripPlanner.project.domain.like.TouristLike;
 import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,7 +50,7 @@ public class UserEntity {
     private String role;
 
     @Column(name = "birth" , length = 8)
-    private int birth;
+    private String birth;
 
     private String provider;
 
@@ -61,8 +63,16 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonBackReference // Like와의 순환 참조 방지
-    private List<Like> likes;
+//    @JsonBackReference(value = "user-planner-like")  // Like와의 순환 참조 방지
+    @JsonIgnore
+    private List<PlannerLike> plannerLikes;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonBackReference(value = "user-tourist-like") // TouristLike와의 순환 참조 방지
+    @JsonIgnore
+    private List<TouristLike> touristLikes; // User와 연결된 TouristLike 목록
+
 
     @PrePersist // 엔티티 저장 직전에 호출
     public void prePersist() {

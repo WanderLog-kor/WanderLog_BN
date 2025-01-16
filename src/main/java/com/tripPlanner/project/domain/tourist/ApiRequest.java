@@ -33,6 +33,7 @@ public class ApiRequest {
     private String mapX;
     private String mapY;
 
+    private String numOfRows;
 
 
     // regionCode : 지역코드

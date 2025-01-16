@@ -2,7 +2,7 @@ package com.tripPlanner.project.domain.Mypage.entity;
 
 
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
+import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

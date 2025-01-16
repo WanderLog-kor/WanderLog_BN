@@ -1,12 +1,10 @@
-package com.tripPlanner.project.domain.destination;
+package com.tripPlanner.project.domain.like;
 
 import com.tripPlanner.project.domain.login.auth.PrincipalDetail;
 import com.tripPlanner.project.domain.makePlanner.dto.DestinationDto;
 import com.tripPlanner.project.domain.makePlanner.entity.Destination;
-import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import com.tripPlanner.project.domain.makePlanner.repository.DestinationRepository;
 import com.tripPlanner.project.domain.makePlanner.service.DestinationService;
-import com.tripPlanner.project.domain.signin.entity.UserEntity;
 import com.tripPlanner.project.domain.tourist.ApiRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-public class DestinationController {
+public class LikeController {
 
     private final DestinationRepository destinationRepository;
     private final DestinationService destinationService;
@@ -39,35 +37,45 @@ public class DestinationController {
     // 좋아요 상태 및 카운트 조회
     @GetMapping("/planner/board/likeStatus")
     public ResponseEntity<LikeStatusResponse> getLikeStatus(
-            @RequestParam(name = "plannerID") Planner plannerID,
-            @AuthenticationPrincipal PrincipalDetail userDetails
+            @RequestParam(name = "plannerID") int plannerID,
+            @RequestParam(name = "userId") String userId
     ) {
-        System.out.println("ㅎㅇ");
-        System.out.println("plannerID : " + plannerID);
-        // UserEntity로 변경
-        UserEntity userId = userDetails.getUserEntity();
-        System.out.println("userID : " + userId);
 
-        LikeStatusResponse response = likeService.getLikeStatus(plannerID, userId);
+        LikeStatusResponse response = likeService.getPlannerLikeStatus(plannerID, userId);
         return ResponseEntity.ok(response);
     }
 
     // 좋아요 토글
     @PostMapping("/planner/board/toggleLike")
     public ResponseEntity<LikeStatusResponse> toggleLike(
-            @RequestBody LikeRequest likeRequest,
-            @AuthenticationPrincipal PrincipalDetail userDetails
+            @RequestBody PlannerLikeRequest likeRequest
     ) {
-        UserEntity userId = userDetails.getUserEntity();
-        System.out.println("userID : " + userId);
-        LikeStatusResponse response = likeService.toggleLike(likeRequest.getPlannerID(), userId);
+
+        LikeStatusResponse response = likeService.togglePlannerLike(likeRequest.getPlannerID(), likeRequest.getUserId());
         return ResponseEntity.ok(response);
     }
+
 
     // destination 리스트 클릭 시 tourist페이지로 가서 정보를 띄워주게 할 contentId를 얻어오기
     @PostMapping("/destination-to-tourist")
     public Mono<String> destinaionToTourist(@RequestBody ApiRequest apiRequest) {
         return destinationService.getLocationBasedList(apiRequest.getMapX(), apiRequest.getMapY());
     }
+
+    @GetMapping("/tourist/likeStatus")
+    public boolean checkTouristLikeStatus(@RequestParam(name = "touristId") int touristId, @RequestParam(name = "userId") String userId) {
+        return likeService.isTouristLiked(touristId, userId);
+    }
+
+    @PostMapping("/tourist/toggleLike")
+    public String toggleTouristLike(@RequestBody TouristLikeRequest touristLikeRequest) {
+
+        if (touristLikeRequest.getUserId() == null) {
+            return "로그인이 필요합니다";
+        }
+        likeService.toggleTouristLike(touristLikeRequest.getTouristId(), touristLikeRequest.getUserId());
+        return "success";
+    }
+
 
 }

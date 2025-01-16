@@ -1,6 +1,5 @@
-package com.tripPlanner.project.domain.destination;
+package com.tripPlanner.project.domain.like;
 
-import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 public class LikeDto {
 
     private Long id; // Like ID
-    private int plannerID;
+    private Long plannerID;
     private String plannerTitle; // Planner 제목
     private String area; // Planner 지역
     private int day; // 여행 일수

@@ -1,5 +1,6 @@
 package com.tripPlanner.project.domain.makePlanner.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tripPlanner.project.domain.makePlanner.dto.DestinationDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,7 @@ public class Destination {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plannerID", referencedColumnName = "plannerID", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Planner planner; // Planner와의 관계 설정 (외래 키)
 
     @Column(name = "name")
