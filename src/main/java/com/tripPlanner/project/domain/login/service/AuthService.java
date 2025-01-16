@@ -104,6 +104,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
     //비밀번호 변경 저장 메서드
     public void updatePassword(String userid,String newPassword){
+            log.info("비밀번호 업데이트 서비스 함수...");
         UserEntity userEntity = userRepository.findByUserid(userid).orElseThrow(()->new IllegalArgumentException("유저를 찾을 수 없습니다"));
         userEntity.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(userEntity);
