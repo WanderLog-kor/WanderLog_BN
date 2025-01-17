@@ -62,11 +62,13 @@ public class LikeController {
         return destinationService.getLocationBasedList(apiRequest.getMapX(), apiRequest.getMapY());
     }
 
+    // 관광지 좋아요 눌렀는지 확인 여부 (로그인 상태에서)
     @GetMapping("/tourist/likeStatus")
     public boolean checkTouristLikeStatus(@RequestParam(name = "touristId") int touristId, @RequestParam(name = "userId") String userId) {
         return likeService.isTouristLiked(touristId, userId);
     }
 
+    // 관광지 좋아요 기능 (추가와 삭제)
     @PostMapping("/tourist/toggleLike")
     public String toggleTouristLike(@RequestBody TouristLikeRequest touristLikeRequest) {
 
@@ -77,5 +79,20 @@ public class LikeController {
         return "success";
     }
 
+    // 여행지 코스 좋아요 눌렀는지 확인 여부 (로그인 상태에서)
+    @GetMapping("/travelCourse/likeStatus")
+    public boolean checktravelCourseLikeStatus(@RequestParam(name = "travelCourseId") int travelCourseId, @RequestParam(name = "userId") String userId) {
+        return likeService.isTravelCourseLiked(travelCourseId, userId);
+    }
 
+    // 여행지 코스 좋아요 기능 (추가와 삭제)
+    @PostMapping("/travelCourse/toggleLike")
+    public String toggletravelCourseLike(@RequestBody TravelCourseLikeRequest travelCourseLikeRequest) {
+
+        if (travelCourseLikeRequest.getUserId() == null) {
+            return "로그인이 필요합니다";
+        }
+        likeService.toggleTravelCourseLike(travelCourseLikeRequest.getTravelCourseId(), travelCourseLikeRequest.getUserId());
+        return "success";
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeService {
     private final PlannerLikeRepository likeRepository;
     private final TouristLikeRepository touristLikeRepository;
+    private final TravelCourseLikeRepository travelCourseLikeRepository;
 
     // 좋아요 상태 및 카운트 조회
     public LikeStatusResponse getPlannerLikeStatus(int plannerID, String userId) {
@@ -63,4 +64,26 @@ public class LikeService {
         return touristLike != null; // 관광지를 좋아요 했다면 true 반환, 아니면 false 반환
     }
 
+    // 여행지 코스에 좋아요 상태 토글
+    public void toggleTravelCourseLike(int travelCourseId, String userId) {
+        // 이미 좋아요를 눌렀는지 확인
+        TravelCourseLike existingLike = travelCourseLikeRepository.findByTravelCourseIdAndUserId(travelCourseId, userId);
+        if (existingLike != null) {
+            // 이미 눌렀으면 삭제 (좋아요 취소)
+            travelCourseLikeRepository.delete(existingLike);
+        } else {
+            // 좋아요 상태 없으면 추가
+            TravelCourseLike travelCourseLike = new TravelCourseLike();
+            travelCourseLike.setTravelCourseId(travelCourseId);
+            travelCourseLike.setUserId(userId);
+            travelCourseLikeRepository.save(travelCourseLike);
+        }
+    }
+
+    // 여행지 코스에 좋아요 상태 확인
+    public boolean isTravelCourseLiked(int travelCourseId, String userId) {
+        // 관광지와 사용자가 존재하는지 확인
+        TravelCourseLike touristLike = travelCourseLikeRepository.findByTravelCourseIdAndUserId(travelCourseId, userId);
+        return touristLike != null; // 관광지를 좋아요 했다면 true 반환, 아니면 false 반환
+    }
 }
