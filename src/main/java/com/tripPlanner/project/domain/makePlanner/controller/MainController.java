@@ -158,7 +158,7 @@ public class MainController {
             String pageNo = Integer.toString(pageNoNum);
             System.out.println("호출");
             String keyword = word;
-            String regionCode = (String)map.get("areacode");
+            String regionCode = (String)map.get("areaCode");
             String hashtag = "";
             String arrange = "A";
             String contentTypeId = "12";
