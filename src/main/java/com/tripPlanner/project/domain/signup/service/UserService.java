@@ -66,7 +66,7 @@ public class UserService {
 
         // 이미지가 없을 경우 기본 이미지 설정
         if (userDto.getImg() == null || userDto.getImg().trim().isEmpty()) {
-            userDto.setImg("/upload/basic/anonymous.jpg");
+            userDto.setImg("/ProfileImg/anonymous.jpg");
         }
 
         System.out.println("Service username :" + userDto.getUsername());

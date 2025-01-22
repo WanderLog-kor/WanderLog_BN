@@ -23,4 +23,5 @@ public class BoardDto {
     private String userId;
     private String userProfileImg;
     private boolean isPublic;
+    private int likeCount;
 }
