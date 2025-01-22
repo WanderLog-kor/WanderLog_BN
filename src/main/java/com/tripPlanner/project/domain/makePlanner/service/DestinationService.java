@@ -36,11 +36,15 @@ public class DestinationService {
                 list.forEach((el) -> {
                     final int index = count.getAndIncrement();
                     Map<String,Object> data = (Map<String,Object>)el.get("data");
+
+                    Double x = Double.parseDouble((String)data.get("x"));
+                    Double y = Double.parseDouble((String)data.get("y"));
+
                     Destination elements = Destination.builder()
                             .destinationID(new DestinationID(planner.getPlannerID(), (Integer) el.get("day"), index))
                             .name((String)data.get("name"))
-                            .x((Double)data.get("x"))
-                            .y((Double)data.get("y"))
+                            .x(x)
+                            .y(y)
                             .address((String)data.get("address"))
                             .category((String)data.get("category"))
                             .image((String)data.get("image"))

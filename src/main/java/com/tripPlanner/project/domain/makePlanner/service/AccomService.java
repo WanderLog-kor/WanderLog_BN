@@ -2,9 +2,7 @@ package com.tripPlanner.project.domain.makePlanner.service;
 
 
 import com.tripPlanner.project.domain.makePlanner.dto.AccomDto;
-import com.tripPlanner.project.domain.makePlanner.dto.FoodDto;
 import com.tripPlanner.project.domain.makePlanner.entity.Accom;
-import com.tripPlanner.project.domain.makePlanner.entity.Food;
 import com.tripPlanner.project.domain.makePlanner.repository.AccomRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -42,17 +40,17 @@ public class AccomService {
     }
 
     @Transactional
-    public List<AccomDto> searchAccom(String word, String areaname) {
+    public List<AccomDto> searchAccom(String word, String areaName) {
         try {
             List<Accom> accoms = new ArrayList<>();
 
-            if(areaname.equals("강원도"))
-                areaname = "강원";
+            if(areaName.equals("강원도"))
+                areaName = "강원";
             if(word.equals("")) {
                 log.info("키워드를 입력하지않음");
-                accoms = accomRepository.searchAreaAccom(areaname);
+                accoms = accomRepository.searchAreaAccom(areaName);
             } else {
-                accoms = accomRepository.searchAccom(word,areaname);
+                accoms = accomRepository.searchAccom(word, areaName);
             }
             List<AccomDto> list = new ArrayList<AccomDto>();
 
