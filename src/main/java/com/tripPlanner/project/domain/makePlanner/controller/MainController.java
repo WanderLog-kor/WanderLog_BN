@@ -4,14 +4,11 @@ package com.tripPlanner.project.domain.makePlanner.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tripPlanner.project.domain.makePlanner.dto.FoodDto;
-import com.tripPlanner.project.domain.makePlanner.entity.Accom;
 import com.tripPlanner.project.domain.makePlanner.entity.Destination;
-import com.tripPlanner.project.domain.makePlanner.entity.Food;
 import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import com.tripPlanner.project.domain.makePlanner.service.*;
 import com.tripPlanner.project.domain.makePlanner.dto.AccomDto;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -128,7 +125,7 @@ public class MainController {
         ArrayList<Map<String,Object>> destination = (ArrayList<Map<String,Object>>)map.get("destination");
 
         log.info("POST /planner/addPlanner...");
-
+        log.info("데스티넹션.. {}",destination.toString());
         Planner planner = plannerService.addPlanner(title,areaName,description,day,isPublic,userid);
         Map<String,Object> datas = destinationService.addDestination(planner, day, destination);
 
@@ -140,25 +137,26 @@ public class MainController {
     public ResponseEntity<Map<String,Object>> search_destination(@RequestBody Map<String,Object> map) throws ParseException {
         String type = (String)map.get("type");
         String word = (String)map.get("word");
-        String areaname = (String)map.get("areaname");
+        String areaName = (String)map.get("areaName");
 
         Map<String,Object> datas = new HashMap<>();
         log.info("POST /planner/searchDestination..."+word);
+        log.info("POST /planner/searchDestination...areaName: {} ",areaName);
 
         if(type.equals("식당")) {
-            System.out.println("keyword : " + word + ", areaname : " + areaname);
-            List<FoodDto> searchList = foodService.searchFood(word,areaname);
+            System.out.println("keyword : " + word + ", areaname : " + areaName);
+            List<FoodDto> searchList = foodService.searchFood(word, areaName);
             datas.put("data",searchList);
         } else if(type.equals("숙소")) {
-            System.out.println("keyword : " + word + ", areaname : " + areaname);
-            List<AccomDto> searchList = accomService.searchAccom(word,areaname);
+            System.out.println("keyword : " + word + ", areaname : " + areaName);
+            List<AccomDto> searchList = accomService.searchAccom(word, areaName);
             datas.put("data",searchList);
         } else if(type.equals("관광지")) {
             int pageNoNum = (Integer)map.get("pageNo");
             String pageNo = Integer.toString(pageNoNum);
             System.out.println("호출");
             String keyword = word;
-            String regionCode = (String)map.get("areacode");
+            String regionCode = (String)map.get("areaCode");
             String hashtag = "";
             String arrange = "A";
             String contentTypeId = "12";
