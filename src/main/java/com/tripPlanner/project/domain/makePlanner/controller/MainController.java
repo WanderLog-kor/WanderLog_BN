@@ -144,11 +144,11 @@ public class MainController {
         log.info("POST /planner/searchDestination...areaName: {} ",areaName);
 
         if(type.equals("식당")) {
-            System.out.println("keyword : " + word + ", areaname : " + areaName);
+            System.out.println("식당클릭"+"keyword : " + word + ", areaname : " + areaName);
             List<FoodDto> searchList = foodService.searchFood(word, areaName);
             datas.put("data",searchList);
         } else if(type.equals("숙소")) {
-            System.out.println("keyword : " + word + ", areaname : " + areaName);
+            System.out.println("숙소클릭"+"keyword : " + word + ", areaname : " + areaName);
             List<AccomDto> searchList = accomService.searchAccom(word, areaName);
             datas.put("data",searchList);
         } else if(type.equals("관광지")) {
@@ -160,7 +160,7 @@ public class MainController {
             String hashtag = "";
             String arrange = "A";
             String contentTypeId = "12";
-            System.out.println("keyword : " + keyword + ", regionCode : " + regionCode + ", pageNo : " + pageNo);
+            System.out.println("관광지 클릭"+"keyword : " + keyword + ", regionCode : " + regionCode + ", pageNo : " + pageNo);
 
             // regionCode만 있는 경우
             if (keyword.isEmpty() && !regionCode.isEmpty()) {
