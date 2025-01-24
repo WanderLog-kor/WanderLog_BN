@@ -11,7 +11,10 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Planner, Integer> {
-    Page<Planner> findByIsPublicTrue(Pageable pageable); // 공개된 플래너만 페이징 처리
+    // 공개된 플래너만 페이징 처리
+    Page<Planner> findByIsPublicTrue(Pageable pageable);
+
+    Page<Planner> findByAreaAndIsPublicTrue(String area, Pageable pageable);
 
     // 특정 사용자(userId)와 일치하는 플래너를 조회
     Page<Planner> findByUser_Userid(String userId, Pageable pageable);
