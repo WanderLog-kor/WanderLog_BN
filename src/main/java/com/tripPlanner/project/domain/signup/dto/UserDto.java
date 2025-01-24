@@ -18,7 +18,5 @@ public class UserDto {
     private String repassword;
     private String email;
     private String birth;
-
-    private String gender;
     private String role;
 }

@@ -21,18 +21,25 @@ public class BoardService {
 
     // 플래너 전체를 가져와서 게시판에 띄우기
     public Page<BoardDto> getPlanners(String userId, String area, Boolean myCourses, Pageable pageable) {
-        // "내가 작성한 코스만 보기"인 경우, userId가 주어졌을 때 해당 사용자만 조회
         if (myCourses != null && myCourses && userId != null) {
+            // 로그 추가
+            System.out.println("내가 작성한 코스만 보기 - userId: " + userId);
             return boardRepository.findByUser_Userid(userId, pageable)
-                    .map(planner -> toBoardDtoWithThumbnail(planner));  // 썸네일 추가
+                    .map(planner -> toBoardDtoWithThumbnail(planner));
         } else if (area != null) {
-            return boardRepository.findByArea(area, pageable)
-                    .map(planner -> toBoardDtoWithThumbnail(planner));  // 썸네일 추가
+            // 지역별 필터링
+            System.out.println("지역별 필터링 - area: " + area);
+            return boardRepository.findByAreaAndIsPublicTrue(area, pageable)
+                    .map(planner -> toBoardDtoWithThumbnail(planner));
         } else {
-            return boardRepository.findAll(pageable)
-                    .map(planner -> toBoardDtoWithThumbnail(planner));  // 썸네일 추가
+            // 모든 공개된 플래너 조회
+            System.out.println("모든 공개된 플래너 조회");
+            return boardRepository.findByIsPublicTrue(pageable)
+                    .map(planner -> toBoardDtoWithThumbnail(planner));
         }
     }
+
+
 
     // 공개된 플래너를 가져와서 반환 (메인페이지)
     public Page<BoardDto> getPlannersForBoard(Pageable pageable) {

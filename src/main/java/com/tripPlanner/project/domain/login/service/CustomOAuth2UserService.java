@@ -115,7 +115,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
                 .userid(userid)
                 .username(username)
                 .email(email)
-                .gender(gender)
                 .role("ROLE_USER")
                 .planners(new ArrayList<>()) // 초기화된 planners 설정
                 .provider(provider)

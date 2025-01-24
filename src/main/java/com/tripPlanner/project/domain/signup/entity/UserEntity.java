@@ -43,9 +43,6 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "gender", nullable = false)
-    private String gender;
-
     @Column(name = "role", nullable = false)
     private String role;
 

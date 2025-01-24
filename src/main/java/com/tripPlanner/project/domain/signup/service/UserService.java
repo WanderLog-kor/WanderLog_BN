@@ -79,7 +79,6 @@ public class UserService {
                 .birth(userDto.getBirth())
                 .img(userDto.getImg()) // 기본 이미지 설정 확인
                 .role(userDto.getRole())
-                .gender(userDto.getGender())
                 .build();
 
         userRepository.save(user);
@@ -193,16 +192,13 @@ public class UserService {
         Random random = new Random();
         StringBuilder key = new StringBuilder();
 
-        for (int i = 0; i < 8; i++) {
-            int idx = random.nextInt(3);
-            switch (idx) {
-                case 0: key.append((char) (random.nextInt(26) + 97)); break; // 소문자
-                case 1: key.append((char) (random.nextInt(26) + 65)); break; // 대문자
-                case 2: key.append(random.nextInt(10)); break; // 숫자
-            }
+        for (int i = 0; i < 6; i++) { // 길이를 6자리로 설정
+            key.append(random.nextInt(10)); // 0~9 숫자
         }
+
         return key.toString();
     }
+
 
 
 
