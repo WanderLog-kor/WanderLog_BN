@@ -11,8 +11,10 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -53,6 +55,12 @@ public class Planner {
     @Column(name = "area", nullable = false)
     private String area;
 
+    @Column(name = "startDate")
+    private LocalDate startDate;
+
+    @Column(name = "endDate")
+    private LocalDate endDate;
+
     @OneToMany(mappedBy = "plannerId", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference // Like와의 순환 참조 방지
@@ -65,6 +73,8 @@ public class Planner {
                 .plannerTitle(planner.getPlannerTitle())
                 .createAt(planner.getCreateAt())
                 .updateAt(planner.getUpdateAt())
+                .startDate(planner.getStartDate())
+                .endDate(planner.getEndDate())
                 .day(planner.getDay())
                 .area(planner.getArea())
                 .isPublic(planner.isPublic())

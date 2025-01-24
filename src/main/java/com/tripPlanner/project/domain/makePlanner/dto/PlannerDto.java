@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -38,7 +39,10 @@ public class PlannerDto {
     private String description;
     @Column
     private String area;
-
+    @Column
+    private LocalDate startDate;
+    @Column
+    private LocalDate endDate;
 
 
     public static Planner dtoToEntity(PlannerDto plannerDto) {
@@ -49,6 +53,8 @@ public class PlannerDto {
                 .createAt(plannerDto.getCreateAt())
                 .updateAt(plannerDto.getUpdateAt())
                 .day(plannerDto.getDay())
+                .startDate(plannerDto.getStartDate())
+                .endDate(plannerDto.getEndDate())
                 .isPublic(plannerDto.isPublic())
                 .description(plannerDto.getDescription())
                 .area(plannerDto.getArea())
@@ -62,6 +68,8 @@ public class PlannerDto {
         this.plannerTitle = planner.getPlannerTitle();
         this.area = planner.getArea();
         this.day = planner.getDay();
+        this.startDate = planner.getStartDate();
+        this.endDate = planner.getEndDate();
         this.description = planner.getDescription();
         this.isPublic = planner.isPublic();
     }

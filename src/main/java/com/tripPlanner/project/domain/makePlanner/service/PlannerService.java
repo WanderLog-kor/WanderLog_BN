@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class PlannerService {
     private DestinationRepository destinationRepository;
 
     @Transactional
-    public Planner addPlanner(String title,String areaName,String description,int day,boolean isPublic,String userid) {
+    public Planner addPlanner(String title, String areaName, String description, int day, boolean isPublic, String userid, LocalDate startDate, LocalDate endDate) {
         try {
             if(title.isEmpty() || description.isEmpty() || day<=0 || userid.isEmpty()) {
                 throw new Exception("에러가 발생했습니다.");
@@ -47,6 +48,8 @@ public class PlannerService {
                     .createAt(LocalDateTime.now())
                     .updateAt(LocalDateTime.now())
                     .day(day)
+                    .startDate(startDate)
+                    .endDate(endDate)
                     .isPublic(isPublic)
                     .description(description)
                     .area(areaName)
