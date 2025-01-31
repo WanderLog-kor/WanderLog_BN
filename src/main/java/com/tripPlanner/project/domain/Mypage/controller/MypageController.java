@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -351,6 +353,30 @@ public class MypageController {
         } catch (Exception e) {
             log.error("회원탈퇴 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원탈퇴 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/check-password")
+    public ResponseEntity<?> checkPassword( HttpServletRequest request,@RequestBody Map<String,String> requestBody){
+        String accessToken = getAccessTokenFromCookies(request);
+        log.info("Access Token: {}", accessToken);
+
+        String userid = jwtTokenProvider.getUserIdFromToken(accessToken);
+        log.info("유저 ID: {}", userid);
+
+        String inputPassword = requestBody.get("password");
+        log.info("유저 PASSWORD: {}", inputPassword);
+
+        Optional<UserEntity> user = userRepository.findByUserid(userid);
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        boolean isMatch = passwordEncoder.matches(inputPassword,user.get().getPassword());
+        if(isMatch){
+            return ResponseEntity.ok("비밀번호가 일치합니다");
+        }else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다");
         }
     }
 

@@ -161,8 +161,9 @@ public class LoginController {
     @ResponseBody
     public ResponseEntity<?> resetPassword(@RequestHeader("Authorization") String token , @RequestBody Map<String,String> request){
         String newPassword = request.get("newPassword");
-
-        String userid = jwtTokenProvider.getUserIdFromToken(token);
+        String pureToken = token.substring(7); //Bearer 부분부터 추출
+        log.info("퓨어토큰 {} , 그냥 토큰 {}" , pureToken,token);
+        String userid = jwtTokenProvider.getUserIdFromToken(pureToken);
 
         authService.updatePassword(userid,newPassword);
 
