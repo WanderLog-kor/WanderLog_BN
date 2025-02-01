@@ -65,6 +65,18 @@ public class SecurityConfig {
                 .addFilterBefore(sessionRemoveFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
 
+        http.exceptionHandling(exception -> exception
+                .authenticationEntryPoint(((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401 에러
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"message\": \"로그인이 필요합니다.\", \"redirect\": \"/error/unauthorized\"}");
+                }))
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 🚨 403 Forbidden 반환
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"message\": \"접근이 거부되었습니다.\", \"redirect\": \"/error/forbidden\"}");
+                })
+        );
 
         http.logout(logout -> logout
                 .logoutUrl("/logout")

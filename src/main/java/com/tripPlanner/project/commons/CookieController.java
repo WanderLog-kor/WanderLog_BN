@@ -32,7 +32,7 @@ public class CookieController {
 
     @PostMapping("/validate")
     public ResponseEntity<LoginResponse> validateCookie(HttpServletRequest request){
-        log.info("POST /api/cookie/validate");
+//        log.info("POST /api/cookie/validate");
         
         //쿠키에서 accessToken 읽기
         String accessToken = null;

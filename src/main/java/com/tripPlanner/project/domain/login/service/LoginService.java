@@ -35,7 +35,7 @@ public class LoginService {
 
     public LoginResponse login(LoginRequest loginRequest){ //로그인 기능
         log.info("로그인 서비스 함수 실행");
-        log.info("LoginRequest : {}", loginRequest.toString());
+//        log.info("LoginRequest : {}", loginRequest.toString());
         Optional<UserEntity> optionalUser = userRepository.findByUserid(loginRequest.getUserid());
         log.info(optionalUser.toString());
         emptyCheckUserIdAndPassword(loginRequest.getUserid(),loginRequest.getPassword()); //아이디 비밀번호 빈칸검사
@@ -79,7 +79,7 @@ public class LoginService {
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication,rememberMe);
         TokenEntity tokenEntity = new TokenEntity(userEntity.getUserid(),jwtToken.getRefreshToken(),expiration);
         jwtTokenProvider.saveRefreshToken(tokenEntity,rememberMe);  //redis 에 리프레시토큰 저장
-        log.info("토큰엔티티 "+tokenEntity);
+//        log.info("토큰엔티티 "+tokenEntity);
         
         return LoginResponse.builder()
                 .userid(userEntity.getUserid())

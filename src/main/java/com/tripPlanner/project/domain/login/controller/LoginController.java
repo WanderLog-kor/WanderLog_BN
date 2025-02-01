@@ -46,9 +46,9 @@ public class LoginController {
             @RequestBody LoginRequest loginRequest,
             HttpServletResponse servletResponse
     ){
-        log.info("login post mapping" + loginRequest);
+//        log.info("login post mapping" + loginRequest);
       LoginResponse response = loginService.login(loginRequest); //loginDto 로 유저정보를 조회함
-        System.out.println(response);
+
         if(!response.isSuccess()){
             return ResponseEntity.badRequest().body(response);
         }
