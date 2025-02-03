@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -44,6 +45,8 @@ public class PlannerDto {
     @Column
     private LocalDate endDate;
 
+    private List<DestinationDto> destinations;
+
 
     public static Planner dtoToEntity(PlannerDto plannerDto) {
         return Planner.builder()
@@ -63,7 +66,7 @@ public class PlannerDto {
 
 
     // Planner 엔티티를 PlannerDto로 변환하는 생성자
-    public PlannerDto(Planner planner) {
+    public PlannerDto(Planner planner,List<DestinationDto> destinations) {
         this.plannerID = planner.getPlannerID();
         this.plannerTitle = planner.getPlannerTitle();
         this.area = planner.getArea();
@@ -72,6 +75,7 @@ public class PlannerDto {
         this.endDate = planner.getEndDate();
         this.description = planner.getDescription();
         this.isPublic = planner.isPublic();
+        this.destinations = destinations;
     }
 
 

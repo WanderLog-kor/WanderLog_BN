@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tripPlanner.project.domain.board.BoardDto;
 import com.tripPlanner.project.domain.like.PlannerLike;
+import com.tripPlanner.project.domain.makePlanner.dto.DestinationDto;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
 import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import jakarta.persistence.*;
@@ -66,7 +67,7 @@ public class Planner {
     @JsonBackReference // Like와의 순환 참조 방지
     private List<PlannerLike> plannerLikes = new ArrayList<>();
 
-    public PlannerDto toDto(Planner planner,String thumbnailImage) {
+    public PlannerDto toDto(Planner planner, List<DestinationDto> destinations) {
         return PlannerDto.builder()
                 .plannerID(planner.getPlannerID())
                 .user(planner.getUser())
@@ -79,6 +80,7 @@ public class Planner {
                 .area(planner.getArea())
                 .isPublic(planner.isPublic())
                 .description(planner.getDescription())
+                .destinations(destinations)
                 .build();
     }
 

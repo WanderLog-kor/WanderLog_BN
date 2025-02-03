@@ -3,7 +3,10 @@ package com.tripPlanner.project.domain.Mypage.Service;
 import com.tripPlanner.project.domain.Mypage.entity.UpdateUserRequest;
 import com.tripPlanner.project.domain.like.PlannerLike;
 import com.tripPlanner.project.domain.like.PlannerLikeRepository;
+import com.tripPlanner.project.domain.makePlanner.dto.DestinationDto;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
+import com.tripPlanner.project.domain.makePlanner.entity.Destination;
+import com.tripPlanner.project.domain.makePlanner.repository.DestinationRepository;
 import com.tripPlanner.project.domain.makePlanner.repository.PlannerRepository;
 import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import com.tripPlanner.project.domain.signup.repository.UserRepository;
@@ -20,6 +23,8 @@ public class MypageService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DestinationRepository destinationRepository;
 
     public void validatePassword(String password) {
         String passwordRegex = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?&]{8,15}$";
@@ -83,20 +88,30 @@ public class MypageService {
 
 
     public List<PlannerDto> getPlannersByUserId(String userId) {
-        log.info("Retrieving planners for user ID: {}", userId); // 디버깅 추가
         return plannerRepository.findByUser_Userid(userId).stream()
-                .map(planner -> PlannerDto.builder()
-                        .plannerID(planner.getPlannerID())
-                        .plannerTitle(planner.getPlannerTitle())
-                        .area(planner.getArea())
-                        .day(planner.getDay())
-                        .description(planner.getDescription())
-                        .isPublic(planner.isPublic())
-                        .createAt(planner.getCreateAt())
-                        .updateAt(planner.getUpdateAt())
-                        .build())
+                .map(planner -> {
+                    List<DestinationDto> destinations = destinationRepository.findByPlanner_PlannerID(planner.getPlannerID())
+                            .stream()
+                            .map(Destination::toDto)
+                            .collect(Collectors.toList());
+
+                    return PlannerDto.builder()
+                            .plannerID(planner.getPlannerID())
+                            .plannerTitle(planner.getPlannerTitle())
+                            .area(planner.getArea())
+                            .day(planner.getDay())
+                            .description(planner.getDescription())
+                            .isPublic(planner.isPublic())
+                            .createAt(planner.getCreateAt())
+                            .updateAt(planner.getUpdateAt())
+                            .startDate(planner.getStartDate())
+                            .endDate(planner.getEndDate())
+                            .destinations(destinations) // 🔥 destination을 DTO로 변환해서 포함
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
+
 
     //Like Service
     @Autowired
@@ -108,4 +123,5 @@ public class MypageService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
         return likeRepository.findByUserId(String.valueOf(user));
     }
+
 }
