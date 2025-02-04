@@ -7,6 +7,7 @@ import com.tripPlanner.project.domain.makePlanner.entity.Destination;
 import com.tripPlanner.project.domain.makePlanner.entity.DestinationID;
 import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import com.tripPlanner.project.domain.makePlanner.repository.DestinationRepository;
+import com.tripPlanner.project.domain.tourist.ApiKeyProvider;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,10 +64,11 @@ public class DestinationService {
     private final WebClient webClient;
 
 
-    @Value("${api.service.key}")
-    private String serviceKey;
+    private final ApiKeyProvider apiKeyProvider;
 
-    public DestinationService(WebClient.Builder webClientBuilder) {
+    public DestinationService(WebClient.Builder webClientBuilder, ApiKeyProvider apiKeyProvider) {
+        this.apiKeyProvider = apiKeyProvider;
+
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         // 쿼리 파라미터 인코딩을 하지 않도록 설정
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
@@ -81,7 +83,7 @@ public class DestinationService {
     public Mono<String> getLocationBasedList(String x, String y) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/locationBasedList1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&pageNo=" + 1
                 + "&numOfRows=10"
                 + "&MobileApp=AppTest"

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,18 +22,16 @@ import java.util.Map;
 public class ApiService {
 
     // contentTypeId : 관광타입 (12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점) ID
-
-
     private final WebClient webClient;
 
-
-    @Value("${api.service.key}")
-    private String serviceKey;
+    // 공공데이터포털 키 (랜덤으로 꺼내옴)
+    private final ApiKeyProvider apiKeyProvider;
 
     @Value("${google.api.key}")
     private String googleKey;
 
-    public ApiService(WebClient.Builder webClientBuilder) {
+    public ApiService(WebClient.Builder webClientBuilder, ApiKeyProvider apiKeyProvider) {
+        this.apiKeyProvider = apiKeyProvider;
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
         // 쿼리 파라미터 인코딩을 하지 않도록 설정
         factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
@@ -43,6 +42,47 @@ public class ApiService {
                 .build();
     }
 
+    // 검색어에 맞춰 데이터를 가져오는 함수 (관광지 코스)
+    public Mono<String> getSearchKeyword(String keyword, String pageNo, String arrange, String contentTypeId) {
+
+//        System.out.println("service의 getSearchKeyword함수 Keyword : " + keyword);
+        // URL을 수동으로 구성
+        String url = "https://apis.data.go.kr/B551011/KorService1/searchKeyword1"
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
+                + "&numOfRows=10"
+                + "&MobileApp=AppTest"
+                + "&MobileOS=ETC"
+                + "&arrange=" + arrange
+                + "&contentTypeId=" + contentTypeId
+                + "&keyword=" + keyword
+                + "&_type=json";
+
+        // pageNo가 null이면 아예 포함하지 않음
+        if (pageNo != null) {
+            url += "&pageNo=" + pageNo;
+        }
+        System.out.println("keyword url : " + url);
+
+        // WebClient를 사용하여 API 호출
+        return webClient.get()
+                .uri(url)  // 인코딩 없이 URL을 그대로 전달
+                .retrieve()
+                .bodyToMono(String.class).flatMap(response -> {
+                    try {
+                        // JSON 응답을 파싱하여 JsonNode로 변환
+                        JsonNode responseNode = new ObjectMapper().readTree(response);
+
+                        // body 데이터만 추출하여 반환
+                        JsonNode items = responseNode.path("response").path("body");
+
+                        // JsonNode 그대로 반환
+                        return Mono.just(items.toString());  // JsonNode를 그대로 JSON 형식의 문자열로 반환
+
+                    } catch (JsonProcessingException e) {
+                        return Mono.error(new RuntimeException("Error processing JSON", e));  // JSON 처리 중 오류가 발생하면 에러 반환
+                    }
+                });
+    }
     // 검색어, 지역, 태그를 모두 입력했을 때 실행할 메서드
     public Mono<String> findCommonDataByCat2AndAreaCode(String areaBasedListResult, String searchKeywordResult) {
         try {
@@ -105,51 +145,12 @@ public class ApiService {
     }
 
 
-    // 검색어에 맞춰 데이터를 가져오는 함수 (관광지 코스)
-    public Mono<String> getSearchKeyword(String keyword, String pageNo, String arrange, String contentTypeId) {
-//        System.out.println("service의 getSearchKeyword함수 Keyword : " + keyword);
-        // URL을 수동으로 구성
-        String url = "https://apis.data.go.kr/B551011/KorService1/searchKeyword1"
-                + "?serviceKey=" + serviceKey
-                + "&numOfRows=10"
-                + "&MobileApp=AppTest"
-                + "&MobileOS=ETC"
-                + "&arrange=" + arrange
-                + "&contentTypeId=" + contentTypeId
-                + "&keyword=" + keyword
-                + "&_type=json";
 
-        // pageNo가 null이면 아예 포함하지 않음
-        if (pageNo != null) {
-            url += "&pageNo=" + pageNo;
-        }
-        System.out.println("keyword url : " + url);
-
-        // WebClient를 사용하여 API 호출
-        return webClient.get()
-                .uri(url)  // 인코딩 없이 URL을 그대로 전달
-                .retrieve()
-                .bodyToMono(String.class).flatMap(response -> {
-                    try {
-                        // JSON 응답을 파싱하여 JsonNode로 변환
-                        JsonNode responseNode = new ObjectMapper().readTree(response);
-
-                        // body 데이터만 추출하여 반환
-                        JsonNode items = responseNode.path("response").path("body");
-
-                        // JsonNode 그대로 반환
-                        return Mono.just(items.toString());  // JsonNode를 그대로 JSON 형식의 문자열로 반환
-
-                    } catch (JsonProcessingException e) {
-                        return Mono.error(new RuntimeException("Error processing JSON", e));  // JSON 처리 중 오류가 발생하면 에러 반환
-                    }
-                });
-    }
 
     public Mono<String> getSearchKeywordByTourist(String keyword, String pageNo, String arrange) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/searchKeyword1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&numOfRows=10"
                 + "&MobileApp=AppTest"
                 + "&MobileOS=ETC"
@@ -255,9 +256,12 @@ public class ApiService {
 
     // 지역 및 해시태그에 맞춰 데이터를 가져오는 함수
     public Mono<String> getAreaBasedList(String regionCode, String hashtag, String pageNo, String arrange, String contentTypeId, String numOfRows) {
+
+        String randomKey = apiKeyProvider.getRandomApiKey();
+        System.out.println("랜덤 키 사용  : " + randomKey);
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/areaBasedList1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&numOfRows=" + numOfRows
                 + "&MobileApp=AppTest"
                 + "&MobileOS=ETC"
@@ -300,7 +304,7 @@ public class ApiService {
     public Mono<String> getDetailInfo(String courseId, String contentTypeId) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/detailInfo1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&pageNo=1"
                 + "&numOfRows=20"
                 + "&MobileApp=AppTest"
@@ -335,7 +339,7 @@ public class ApiService {
     public Mono<String> getDetailCommon(String courseId) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/detailCommon1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&pageNo="
                 + "&numOfRows=10"
                 + "&MobileApp=AppTest"
@@ -440,7 +444,7 @@ public class ApiService {
     public Mono<String> getDetailIntro(String courseId, String contentTypeId) {
         // URL을 수동으로 구성
         String url = "https://apis.data.go.kr/B551011/KorService1/detailIntro1"
-                + "?serviceKey=" + serviceKey
+                + "?serviceKey=" + apiKeyProvider.getRandomApiKey()
                 + "&pageNo=" + 1
                 + "&numOfRows=10"
                 + "&MobileApp=AppTest"
