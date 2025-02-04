@@ -60,6 +60,8 @@ public class BoardService {
                 .plannerID(planner.getPlannerID())
                 .plannerTitle(planner.getPlannerTitle())
                 .createAt(planner.getCreateAt())
+                .startDate(planner.getStartDate())
+                .endDate(planner.getEndDate())
                 .day(planner.getDay())
                 .username(planner.getUser().getUsername())
                 .thumbnailImage(thumbnailImage)  // 썸네일 이미지 설정

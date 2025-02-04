@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,6 +21,8 @@ public class BoardDto {
     private String thumbnailImage;
     private String area;
     private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String userId;
     private String userProfileImg;
     private boolean isPublic;
