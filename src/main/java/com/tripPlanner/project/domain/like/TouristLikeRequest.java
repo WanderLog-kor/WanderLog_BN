@@ -12,4 +12,7 @@ import lombok.Setter;
 public class TouristLikeRequest {
     private int touristId;
     private String userId;
+
+    private String contentid;
+
 }

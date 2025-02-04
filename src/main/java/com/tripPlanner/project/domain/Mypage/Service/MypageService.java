@@ -1,19 +1,24 @@
 package com.tripPlanner.project.domain.Mypage.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tripPlanner.project.domain.Mypage.entity.UpdateUserRequest;
-import com.tripPlanner.project.domain.like.PlannerLike;
-import com.tripPlanner.project.domain.like.PlannerLikeRepository;
+import com.tripPlanner.project.domain.like.*;
 import com.tripPlanner.project.domain.makePlanner.dto.DestinationDto;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
 import com.tripPlanner.project.domain.makePlanner.entity.Destination;
+import com.tripPlanner.project.domain.makePlanner.entity.Planner;
 import com.tripPlanner.project.domain.makePlanner.repository.DestinationRepository;
 import com.tripPlanner.project.domain.makePlanner.repository.PlannerRepository;
-import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import com.tripPlanner.project.domain.signup.repository.UserRepository;
+import com.tripPlanner.project.domain.tourist.ApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +30,30 @@ public class MypageService {
     private UserRepository userRepository;
     @Autowired
     private DestinationRepository destinationRepository;
+    //Like Service
+    @Autowired
+    private PlannerLikeRepository likeRepository;
+    @Autowired
+    private PlannerRepository plannerRepository;
+    @Autowired
+    private TouristLikeRepository touristLikeRepository;
+    @Autowired
+    private TravelCourseLikeRepository travelCourseLikeRepository;
+
+    private final WebClient webClient;
+    @Autowired
+    private ApiService apiService;
+
+    public MypageService(WebClient.Builder webClientBuilder) {
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
+        // 쿼리 파라미터 인코딩을 하지 않도록 설정
+        factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
+        // WebClient를 생성할 때 이 factory를 사용
+        this.webClient = WebClient.builder()
+                .uriBuilderFactory(factory)
+                .build();
+    }
 
     public void validatePassword(String password) {
         String passwordRegex = "^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?&]{8,15}$";
@@ -77,8 +106,6 @@ public class MypageService {
         }
     }
 
-    @Autowired
-    private PlannerRepository plannerRepository;
 
 //    public List<PlannerDto> getPlannersByUserId(String userId) {
 //        return plannerRepository.findByUser_Userid(userId).stream()
@@ -86,7 +113,7 @@ public class MypageService {
 //                .collect(Collectors.toList());
 //    }
 
-
+    //유저 아이디에 맞는 플래너를 받아오는 서비스 함수
     public List<PlannerDto> getPlannersByUserId(String userId) {
         return plannerRepository.findByUser_Userid(userId).stream()
                 .map(planner -> {
@@ -112,16 +139,92 @@ public class MypageService {
                 .collect(Collectors.toList());
     }
 
+    //유저 아이디에 맞는 좋아요한 플래너를 받아오는 서비스 함수
+    public List<PlannerDto> getLikedPlanners(String userId) {
 
-    //Like Service
-    @Autowired
-    private PlannerLikeRepository likeRepository;
+        List<PlannerLike> likePlanners = likeRepository.findByUserId(userId);
+        
+        //좋아요한 플래너 ID 목록 추출
+        List<Integer> plannerIds = likePlanners.stream()
+                .map(PlannerLike::getPlannerId)
+                .collect(Collectors.toList());
+        
+        List<Planner> plannerList = plannerRepository.findByPlannerIDIn(plannerIds);
 
+        log.info("플래너 리스트 {}",plannerList);
+        log.info("좋아요 리스트 {}",likePlanners);
+        return plannerList.stream()
+                .map(planner -> {
+                    List<DestinationDto> destinations = destinationRepository.findByPlanner_PlannerID(planner.getPlannerID())
+                            .stream()
+                            .map(Destination::toDto)
+                            .collect(Collectors.toList());
 
-    public List<PlannerLike> getLikedPlanners(String userId) {
-        UserEntity user = userRepository.findByUserid(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-        return likeRepository.findByUserId(String.valueOf(user));
+                    return PlannerDto.builder()
+                            .plannerID(planner.getPlannerID())
+                            .plannerTitle(planner.getPlannerTitle())
+                            .area(planner.getArea())
+                            .day(planner.getDay())
+                            .description(planner.getDescription())
+                            .isPublic(planner.isPublic())
+                            .createAt(planner.getCreateAt())
+                            .updateAt(planner.getUpdateAt())
+                            .destinations(destinations) // 🔥 Destination 정보 추가
+                            .build();
+                })
+                .collect((Collectors.toList()));
+    }
+    
+    //좋아요한 관광지를 받아오는 함수
+    public List<JsonNode> getLikedTourists(String userid){
+
+        List<TouristLike> likedTourists = touristLikeRepository.findByUserId(userid);
+        log.info("좋아요한 관광지 : {}",likedTourists);
+
+        List<JsonNode> touristDataList = new ArrayList<>();
+
+        for(TouristLike touristLike : likedTourists){
+            String contentId = String.valueOf(touristLike.getTouristId());
+
+            try{
+                String response = String.valueOf(apiService.getDetailCommon(contentId).block());
+
+                if(response != null){
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    JsonNode jsonNode = objectMapper.readTree(response);
+                    touristDataList.add(jsonNode);
+                }
+            } catch (Exception e){
+                log.error("관광지 데이터 조회 중 오류 발생 (contentId={}): {}", contentId, e.getMessage());
+            }
+        }
+        return touristDataList;
+    }
+
+    //좋아요 누른 여행코스 받아오는 함수
+    public List<JsonNode> getLikedTravelCourses(String userid){
+
+        List<TravelCourseLike> likedTravelCourses = travelCourseLikeRepository.findByUserId(userid);
+        log.info("좋아요한 여행코스 : {}",likedTravelCourses);
+
+        List<JsonNode> travelCourseList = new ArrayList<>();
+
+        for(TravelCourseLike travelCourseLike : likedTravelCourses){
+            String contentId = String.valueOf(travelCourseLike.getTravelCourseId());
+
+            try{
+                String response = String.valueOf(apiService.getDetailCommon(contentId).block());
+
+                if(response != null){
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    JsonNode jsonNode = objectMapper.readTree(response);
+                    travelCourseList.add(jsonNode);
+                }
+            } catch (Exception e){
+                log.error("여행코스 데이터 조회 중 오류 발생 (contentId={}): {}", contentId, e.getMessage());
+            }
+        }
+        return travelCourseList;
     }
 
 }

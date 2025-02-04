@@ -67,7 +67,7 @@ public class PlannerService {
     @Transactional
     public String deletePlanner(int plannerid) {
         try {
-            long id = plannerid;
+            int id = plannerid;
             Optional<Planner> result = plannerRepository.findById(id);
             if(result.isEmpty()) {
                 return "해당 플래너가 존재하지 않습니다.";

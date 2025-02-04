@@ -1,7 +1,7 @@
 package com.tripPlanner.project.domain.Mypage.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.tripPlanner.project.domain.Mypage.entity.UpdateUserRequest;
-import com.tripPlanner.project.domain.like.LikeDto;
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
 import com.tripPlanner.project.domain.makePlanner.repository.PlannerRepository;
@@ -11,7 +11,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -284,8 +282,8 @@ public class MypageController {
 
         try {
             List<PlannerDto> planners = mypageService.getPlannersByUserId(userId);
-            log.info("사용자 플래너 목록 반환 성공: {}", planners.size());
-            log.info("사용자 플래너 : {}", planners);
+//            log.info("사용자 플래너 목록 반환 성공: {}", planners.size());
+//            log.info("사용자 플래너 : {}", planners);
             return ResponseEntity.ok(planners);
         } catch (Exception e) {
             log.error("플래너 목록 반환 중 오류 발생", e);
@@ -293,38 +291,83 @@ public class MypageController {
         }
     }
 
-//    @GetMapping("/{userid}/liked-planners")
-//    public ResponseEntity<?> getLikedPlanners(@PathVariable(name = "userid") String userid) {
-//        System.out.println("/{userid}/liked-planners" + userid);
-//        log.info("Received request for liked planners with userid: {}", userid);
-//
-//        Optional<UserEntity> userOptional = userRepository.findById(userid);
-//
-//        if (userOptional.isEmpty()) {
-//
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
-//        }
-//
-//        UserEntity user = userOptional.get();
-//
-//        // Like 데이터를 DTO로 변환
-//        List<LikeDto> likedPlanners = user.getLikes().stream()
-//                .map(like -> new LikeDto(
-////                        (long) like.getPlannerId().getPlannerID(),
-//                        like.getId(),
-//                        like.getPlannerId().getPlannerID(),
-//                        like.getPlannerId().getPlannerTitle(),
-//                        like.getPlannerId().getArea(),
-//                        like.getPlannerId().getDay(),
-//                        like.getPlannerId().getDescription(),
-//                        like.getPlannerId().getCreateAt()
-//                ))
-//                .collect(Collectors.toList());
-//
-//        log.info("좋아요한 플래너  : {}", likedPlanners.isEmpty());
-//        log.info("likedPlanners: {}", likedPlanners);
-//        return ResponseEntity.ok(likedPlanners);
-//    }
+    //좋아요 누른 여행계획
+    @GetMapping("/{userid}/liked-planners")
+    public ResponseEntity<?> getLikedPlanners(@PathVariable(name = "userid") String userid) {
+        System.out.println("/{userid}/liked-planners" + userid);
+        log.info("Received request for liked planners with userid: {}", userid);
+
+        Optional<UserEntity> userOptional = userRepository.findById(userid);
+
+        if (userOptional.isEmpty()) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        UserEntity user = userOptional.get();
+
+        List<PlannerDto> likedPlanners = mypageService.getLikedPlanners(userid);
+
+        if (likedPlanners.isEmpty()) {
+            log.warn("좋아요한 플래너가 없습니다: {}", userid);
+            return ResponseEntity.noContent().build();
+        }
+        log.info("좋아요한 플래너  : {}", likedPlanners);
+
+        return ResponseEntity.ok(likedPlanners);
+    }
+
+    //좋아요 누른 관광코스
+    @GetMapping("/{userid}/liked-travelcourse")
+    public ResponseEntity<?> getLikedtravelcourses(@PathVariable(name = "userid") String userid) {
+        System.out.println("/{userid}/liked-travelcourses" + userid);
+        log.info("Received request for liked travelcourses with userid: {}", userid);
+
+        Optional<UserEntity> userOptional = userRepository.findById(userid);
+
+        if (userOptional.isEmpty()) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        List<JsonNode> likedTravelCourseInfo = mypageService.getLikedTravelCourses(userid);
+
+        if (likedTravelCourseInfo.isEmpty()) {
+            log.warn("좋아요한 travelcourses 없습니다: {}", userid);
+            return ResponseEntity.noContent().build();
+        }
+        log.info("좋아요한 travelcourses  : {}", likedTravelCourseInfo);
+
+        return ResponseEntity.ok(likedTravelCourseInfo);
+    }
+
+    //좋아요 누른 관광지
+    @GetMapping("/{userid}/liked-tourists")
+    public ResponseEntity<?> getLikedtourlists(@PathVariable(name = "userid") String userid) {
+        System.out.println("/{userid}/liked-tourlists" + userid);
+        log.info("Received request for liked tourlists with userid: {}", userid);
+
+        Optional<UserEntity> userOptional = userRepository.findById(userid);
+
+        if (userOptional.isEmpty()) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        List<JsonNode> likeTouristInfo = mypageService.getLikedTourists(userid);
+
+        if (likeTouristInfo.isEmpty()) {
+            log.warn("좋아요한 tourlist 없습니다: {}", userid);
+            return ResponseEntity.noContent().build();
+        }
+
+        log.info("좋아요한 tourlist  : {}", likeTouristInfo);
+        return ResponseEntity.ok(likeTouristInfo);
+    }
+
+
+
+
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(HttpServletRequest request) {
