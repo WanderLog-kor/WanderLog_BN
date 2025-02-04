@@ -24,7 +24,7 @@ public class TravelCourseLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "travelcourseId", nullable = false)
+    @Column(name = "travelCourseId", nullable = false)
     private int travelCourseId; // 여행코스 ID (API에서 제공받은 관광지 ID)
 
     @Column(name = "userId", nullable = false)
