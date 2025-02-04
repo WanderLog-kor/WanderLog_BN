@@ -44,6 +44,7 @@ public class PlannerDto {
     private LocalDate startDate;
     @Column
     private LocalDate endDate;
+    private String userid;
 
     private List<DestinationDto> destinations;
 

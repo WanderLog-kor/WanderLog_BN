@@ -5,6 +5,7 @@ import com.tripPlanner.project.domain.Mypage.entity.UpdateUserRequest;
 import com.tripPlanner.project.domain.login.auth.jwt.JwtTokenProvider;
 import com.tripPlanner.project.domain.makePlanner.dto.PlannerDto;
 import com.tripPlanner.project.domain.makePlanner.repository.PlannerRepository;
+import com.tripPlanner.project.domain.signup.dto.UserDto;
 import com.tripPlanner.project.domain.signup.entity.UserEntity;
 import com.tripPlanner.project.domain.signup.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -111,6 +112,7 @@ public class MypageController {
 
         UserEntity user = optionalUser.get();
         log.info("사용자 정보: {}", user);
+
         return ResponseEntity.ok(user);
     }
 
@@ -283,7 +285,7 @@ public class MypageController {
         try {
             List<PlannerDto> planners = mypageService.getPlannersByUserId(userId);
 //            log.info("사용자 플래너 목록 반환 성공: {}", planners.size());
-//            log.info("사용자 플래너 : {}", planners);
+            log.info("사용자 플래너 : {}", planners);
             return ResponseEntity.ok(planners);
         } catch (Exception e) {
             log.error("플래너 목록 반환 중 오류 발생", e);

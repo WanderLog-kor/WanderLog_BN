@@ -125,6 +125,8 @@ public class MypageService {
                     return PlannerDto.builder()
                             .plannerID(planner.getPlannerID())
                             .plannerTitle(planner.getPlannerTitle())
+//                            .user(planner.getUser())
+                            .userid(userId)
                             .area(planner.getArea())
                             .day(planner.getDay())
                             .description(planner.getDescription())
