@@ -239,6 +239,7 @@ public class MainController {
         if(map.get("plannerid") == null) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
+        log.info("POST /planner/updatePlanner...", map);
         int plannerid = (Integer)map.get("plannerid");
 
         String title = (String)map.get("title");
@@ -249,7 +250,6 @@ public class MainController {
         String userid = (String)map.get("userid");
         ArrayList<Map<String,Object>> destination = (ArrayList<Map<String,Object>>)map.get("destination");
 
-        log.info("POST /planner/updatePlanner...", map);
 
         Planner planner = plannerService.updatePlanner(plannerid,title,areaName,description,day,isPublic,userid);
         Map<String,Object> datas = destinationService.addDestination(planner, day, destination);

@@ -169,6 +169,8 @@ public class MypageService {
                             .isPublic(planner.isPublic())
                             .createAt(planner.getCreateAt())
                             .updateAt(planner.getUpdateAt())
+                            .startDate(planner.getStartDate())
+                            .endDate(planner.getEndDate())
                             .destinations(destinations) // 🔥 Destination 정보 추가
                             .build();
                 })
