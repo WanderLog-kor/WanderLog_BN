@@ -42,6 +42,9 @@ public class Destination {
     @Column(name = "image", length=1024)
     private String image; // 장소의 이미지 URL (구글 API사용)
 
+    @Column(name = "uniqueid")
+    private String uniqueId;
+
     public DestinationDto toDto() {
         return new DestinationDto(
                 this.name,
@@ -54,7 +57,8 @@ public class Destination {
                 this.planner.getUser().getUsername(),
                 this.destinationID.getPlannerID(),
                 this.destinationID.getDay(),
-                this.destinationID.getDayOrder()
+                this.destinationID.getDayOrder(),
+                this.uniqueId
         );
     }
 }

@@ -49,6 +49,7 @@ public class DestinationService {
                             .address((String)data.get("address"))
                             .category((String)data.get("category"))
                             .image((String)data.get("image"))
+                            .uniqueId((String) data.get("uniqueId"))
                             .build();
                     destinationRepository.save(elements);
                 });

@@ -83,7 +83,7 @@ public class PlannerService {
     }
 
     @Transactional
-    public Planner updatePlanner(int plannerid, String title, String areaName, String description, int day, boolean isPublic, String userid) {
+    public Planner updatePlanner(int plannerid, String title, String areaName, String description, int day, boolean isPublic, String userid,LocalDate startDate,LocalDate endDate) {
         try {
             if(title.isEmpty() || description.isEmpty() || day<=0 || userid.isEmpty() || plannerid<=0) {
                 throw new Exception("에러가 발생했습니다.");
@@ -107,6 +107,8 @@ public class PlannerService {
                     .plannerTitle(title)
                     .createAt(LocalDateTime.now())
                     .updateAt(LocalDateTime.now())
+                    .startDate(startDate)
+                    .endDate(endDate)
                     .day(day)
                     .isPublic(isPublic)
                     .description(description)

@@ -18,4 +18,5 @@ public class DestinationDto {
     private int plannerID;
     private int day;
     private int dayOrder;
+    private String uniqueId;
 }

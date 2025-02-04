@@ -130,8 +130,6 @@ public class MainController {
 
         ArrayList<Map<String,Object>> destination = (ArrayList<Map<String,Object>>)map.get("destination");
 
-        log.info("POST /planner/addPlanner... {}, {}", formattedStartDate,formattedEndDate);
-        log.info("데스티넹션.. {}",destination.toString());
         Planner planner = plannerService.addPlanner(title,areaName,description,day,isPublic,userid,formattedStartDate,formattedEndDate);
         Map<String,Object> datas = destinationService.addDestination(planner, day, destination);
 
@@ -248,10 +246,15 @@ public class MainController {
         boolean isPublic = (Boolean)map.get("isPublic");
         int day = (Integer)map.get("day");
         String userid = (String)map.get("userid");
+        String startDate = (String) map.get("startDate");
+        LocalDate formattedStartDate = LocalDate.parse(startDate.substring(0,10));
+        String endDate = (String) map.get("endDate");
+        LocalDate formattedEndDate = LocalDate.parse(endDate.substring(0,10));
         ArrayList<Map<String,Object>> destination = (ArrayList<Map<String,Object>>)map.get("destination");
+//        List<Destination> destinations = (List<Destination>) map.get("destination");
+        log.info("모든 요소들..{} , {} , {}",destination, formattedStartDate,formattedEndDate);
 
-
-        Planner planner = plannerService.updatePlanner(plannerid,title,areaName,description,day,isPublic,userid);
+        Planner planner = plannerService.updatePlanner(plannerid,title,areaName,description,day,isPublic,userid,formattedStartDate,formattedEndDate);
         Map<String,Object> datas = destinationService.addDestination(planner, day, destination);
 
         return new ResponseEntity(datas, HttpStatus.OK);
