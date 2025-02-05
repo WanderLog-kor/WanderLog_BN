@@ -115,7 +115,9 @@ public class MypageService {
 
     //유저 아이디에 맞는 플래너를 받아오는 서비스 함수
     public List<PlannerDto> getPlannersByUserId(String userId) {
+
         return plannerRepository.findByUser_Userid(userId).stream()
+
                 .map(planner -> {
                     List<DestinationDto> destinations = destinationRepository.findByPlanner_PlannerID(planner.getPlannerID())
                             .stream()
@@ -126,7 +128,7 @@ public class MypageService {
                             .plannerID(planner.getPlannerID())
                             .plannerTitle(planner.getPlannerTitle())
 //                            .user(planner.getUser())
-                            .userid(userId)
+                            .userId(userId)
                             .area(planner.getArea())
                             .day(planner.getDay())
                             .description(planner.getDescription())
