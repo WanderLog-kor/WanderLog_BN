@@ -169,6 +169,7 @@ public class MypageService {
                             .plannerTitle(planner.getPlannerTitle())
                             .area(planner.getArea())
                             .day(planner.getDay())
+                            .userId(userId)
                             .description(planner.getDescription())
                             .isPublic(planner.isPublic())
                             .createAt(planner.getCreateAt())
