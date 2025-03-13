@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000") //리액트 도메인 허가
+//@CrossOrigin(origins = "http://localhost:3000") //리액트 도메인 허가
 public class LoginController {
 
     private final LoginService loginService;
