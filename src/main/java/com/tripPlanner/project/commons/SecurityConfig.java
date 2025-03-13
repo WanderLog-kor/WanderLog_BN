@@ -124,7 +124,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://localhost:3000"); //리액트 url 허용
         configuration.addAllowedOrigin("http://localhost:9000"); //리액트 url 허용
         configuration.addAllowedOrigin("https://wanderlog-kor.github.io"); //리액트 url 허용!
-        configuration.addAllowedOrigin("https://wanderlog.shop"); //리액트 url 허용
+        configuration.addAllowedOrigin("http://wanderlog.site"); //리액트 url 허용
         configuration.addAllowedMethod("*"); //모든 HTTP 메서드 허용 / 추후 수정
         configuration.addAllowedHeader("*"); //모든 헤더 허용 /추후 수정
         configuration.setAllowCredentials(true); //자격 증명 허용
