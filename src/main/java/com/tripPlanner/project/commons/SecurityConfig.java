@@ -122,8 +122,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:3000"); //리액트 url 허용
-        configuration.addAllowedOrigin("http://localhost:9000"); //리액트 url 허용
+//        configuration.addAllowedOrigin("http://localhost:3000"); //리액트 url 허용
+//        configuration.addAllowedOrigin("http://localhost:9000"); //리액트 url 허용
 //        configuration.addAllowedOrigin("https://wanderlog-kor.github.io"); //리액트 url 허용!
 //        configuration.addAllowedOrigin("http://wanderlog.site"); //리액트 url 허용
         configuration.addAllowedOrigin("https://wanderlogg.store");
