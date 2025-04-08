@@ -45,9 +45,10 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         //CORS 설정 활성화
-        http.cors((config) -> {
-            corsConfigurationSource();
-        });
+//        http.cors((config) -> {
+//            corsConfigurationSource();
+//        });
+        http.cors().configurationSource(corsConfigurationSource());
 
         // 정적 경로
         http.authorizeHttpRequests(auth -> auth
