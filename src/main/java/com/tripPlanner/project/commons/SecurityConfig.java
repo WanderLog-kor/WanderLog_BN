@@ -24,15 +24,13 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final Oauth2LoginSuccessHandler oauth2LoginSuccessHandler;
@@ -47,9 +45,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         //CORS 설정 활성화
-        http.cors((config) -> {
-            corsConfigurationSource();
-        });
+//        http.cors((config) -> {
+//            corsConfigurationSource();
+//        });
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         // 정적 경로
         http.authorizeHttpRequests(auth -> auth
@@ -156,11 +155,4 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
 
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("https://wanderlogg.store")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*");
-    }
 }
