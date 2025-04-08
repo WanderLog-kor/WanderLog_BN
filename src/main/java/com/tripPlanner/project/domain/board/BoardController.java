@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/planner")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https//wanderlogg.store")
 public class BoardController {
 
     private final BoardService boardService;
