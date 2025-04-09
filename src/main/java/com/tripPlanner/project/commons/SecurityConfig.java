@@ -127,8 +127,11 @@ public class SecurityConfig {
 //        configuration.addAllowedOrigin("https://wanderlog-kor.github.io"); //리액트 url 허용!
 //        configuration.addAllowedOrigin("http://wanderlog.site"); //리액트 url 허용
         configuration.addAllowedOrigin("https://wanderlogg.store");
-        configuration.addAllowedMethod("*"); //모든 HTTP 메서드 허용 / 추후 수정
+        configuration.addAllowedMethod("GET"); //모든 HTTP 메서드 허용 / 추후 수정
         configuration.addAllowedHeader("*"); //모든 헤더 허용 /추후 수정
+        configuration.addAllowedOriginPattern("*");
+        configuration.addExposedHeader("Authorization");
+        configuration.setMaxAge(3600L); //preflight 요청 캐시 시간을 설정 (1시간)
         configuration.setAllowCredentials(true); //자격 증명 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
