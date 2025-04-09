@@ -39,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.httpBasic(AbstractHttpConfigurer::disable);
         // 폼로그인 비활성화 (jwt사용하기 위해)
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -48,7 +48,7 @@ public class SecurityConfig {
 //        http.cors((config) -> {
 //            corsConfigurationSource();
 //        });
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
 
         // 정적 경로
         http.authorizeHttpRequests(auth -> auth
@@ -122,15 +122,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-//        configuration.addAllowedOrigin("http://localhost:3000"); //리액트 url 허용
-//        configuration.addAllowedOrigin("http://localhost:9000"); //리액트 url 허용
-//        configuration.addAllowedOrigin("https://wanderlog-kor.github.io"); //리액트 url 허용!
-//        configuration.addAllowedOrigin("http://wanderlog.site"); //리액트 url 허용
         configuration.addAllowedOrigin("https://wanderlogg.store");
         configuration.addAllowedMethod("*"); //모든 HTTP 메서드 허용 / 추후 수정
         configuration.addAllowedHeader("*"); //모든 헤더 허용 /추후 수정
-        configuration.addAllowedOriginPattern("*");
-        configuration.addExposedHeader("Authorization");
+
         configuration.setMaxAge(3600L); //preflight 요청 캐시 시간을 설정 (1시간)
         configuration.setAllowCredentials(true); //자격 증명 허용
 
