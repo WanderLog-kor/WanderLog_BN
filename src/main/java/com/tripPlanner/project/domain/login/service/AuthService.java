@@ -131,7 +131,7 @@ import java.util.concurrent.ConcurrentHashMap;
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-            cookie.setDomain("wanderlogg.store");
+            cookie.setDomain("wanderlog.shop");
             cookie.setAttribute("SameSite","None");
             response.addCookie(cookie);
         }
