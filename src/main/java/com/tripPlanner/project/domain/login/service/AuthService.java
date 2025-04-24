@@ -68,6 +68,7 @@ import java.util.concurrent.ConcurrentHashMap;
                     .httpOnly(true)
                     .secure(true) // HTTPS 사용 시 true로 변경
                     .sameSite("None") // CORS 요청에서도 쿠키 허용
+                    .domain("wanderlogg.store")
                     .path("/")
                     .maxAge(30 * 60) // 30분 유효
                     .build();
@@ -131,7 +132,7 @@ import java.util.concurrent.ConcurrentHashMap;
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-            cookie.setDomain("wanderlog.shop");
+            cookie.setDomain("wanderlogg.store");
             cookie.setAttribute("SameSite","None");
             response.addCookie(cookie);
         }
