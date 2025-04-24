@@ -44,7 +44,8 @@ import java.util.concurrent.ConcurrentHashMap;
         public LoginResponse refreshAccessToken(Authentication authentication, String refreshToken){
             try{
                 // 엑세스 토큰 재검증 및 재생성
-                String newAccessToken = jwtTokenProvider.regenAccessToken(authentication,refreshToken);
+                String
+                        newAccessToken = jwtTokenProvider.regenAccessToken(authentication,refreshToken);
 
                 return LoginResponse.builder()
                         .success(true)
@@ -129,6 +130,7 @@ import java.util.concurrent.ConcurrentHashMap;
             cookie.setMaxAge(0);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
+            cookie.setDomain("wanderlogg.store");
             response.addCookie(cookie);
         }
 

@@ -56,7 +56,7 @@ public class Oauth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         //쿠키 저장
         authService.setTokenCookies(response,jwtToken.getAccessToken());
 
-        response.sendRedirect("http://localhost:3000/oauth2/success?userid=" + userid);
+        response.sendRedirect("https://wanderlogg.store/oauth2/success?userid=" + userid);
         log.info("리액트 홈페이지 이동");
 
         log.info("JWT 토큰 생성 및 반환 완료: {}" , jwtToken);
