@@ -424,7 +424,7 @@ public class ApiService {
                                 resultMap.put("photoUrls", photoUrls); // 모든 이미지 URL 리스트
                                 resultMap.put("latitude", latitude);
                                 resultMap.put("longitude", longitude);
-                                System.out.println(resultMap.toString());
+                                System.out.println("리절트"+resultMap.toString());
                                 return Mono.just(resultMap); // 사진 URL 리스트, 위도, 경도를 포함한 Map 반환
                             } else {
                                 return Mono.error(new RuntimeException("No valid location found in first result"));
