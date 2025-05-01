@@ -40,6 +40,6 @@ out/
 #application-oauth.properties
 
 # application.properties 또는 application.yml 제외
-src/main/resources/application.properties
+#src/main/resources/application.properties
 #src/main/resources/application.yml
 
