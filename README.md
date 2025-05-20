@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=rect&color=a2d2ff&height=200&section=header&text=나의&nbsp;여행파트너,&nbsp;여행가자&fontSize=40&fontColor=000814&animation=scaleIn&fontAlignY=50&fontAlign=35)
+![header](https://capsule-render.vercel.app/api?type=rect&color=a2d2ff&height=200&section=header&text=나의&nbsp;여행파트너,&nbsp;WanderLog&fontSize=40&fontColor=000814&animation=scaleIn&fontAlignY=50&fontAlign=35)
 
 
 ![개요](https://github.com/user-attachments/assets/0258e317-46b3-4885-a891-70b8bc2ed92f)
